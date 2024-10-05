@@ -1,15 +1,15 @@
 const express = require('express');
 const { getUserProfile, updateProfile, uploadProfileImage } = require('../controllers/userController');
-const upload = require('../config/s3');
 const router = express.Router();
+const { authenticateToken } = require('../middleware/authMiddleware');
 
 // Get user profile
-router.get('/profile', getUserProfile);
+router.get('/profile', authenticateToken, getUserProfile);
 
-// Update user profile (without image)
-router.put('/profile', updateProfile);
+// Update user profile
+router.put('/profile', authenticateToken, updateProfile);
 
-// Upload profile image to AWS S3
-router.post('/profile/image', upload.single('profileImage'), uploadProfileImage);
+// Upload profile image
+router.post('/profile/image', authenticateToken, uploadProfileImage);
 
 module.exports = router;
